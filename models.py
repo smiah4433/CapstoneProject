@@ -15,9 +15,20 @@ class Game(Model):
     released = DateTimeField(default=datetime.datetime.now)
     platforms = CharField()
 
+    # convert game model to dictionary
+    def json(self):
+        return {
+            "name": self.name,
+            "background_image": self.background_image,
+            "ratings": self.ratings,
+            "released": self.released,
+            "platforms": self.platforms
+        }
+
 
     class Meta:
         database = DATABASE  #Connects to the Sqlite DATABASE
+        # fields = ('name', 'background_image', 'ratings', 'released', 'platforms')
 
 def initialize():
     DATABASE.connect()

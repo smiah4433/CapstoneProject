@@ -32,11 +32,18 @@ def games_index():
 def games_search(search_term):
     print(search_term)
     req = requests.get('https://api.rawg.io/api/games?key=cc7a20c2a9db45bc8a0eb2994afda720&search=' + search_term)
-    print(req.json())
+    # print(req.json())
 
+    res = req.json()
+    print("res", res)
+    results = res["results"]
+
+    data = []
+    for row in results:
+        data.append({"name": row["name"], "background_image": row["background_image"]})
 
     return jsonify(
-        data = req.json(),
+        data = data,
         message = "Searched game correctly",
         status = 201
     ),200
@@ -90,15 +97,20 @@ def get_one_game(id):
     ), 200
 
 #Update Route
-@games.route('/<id>', methods=['PUT'])
+@games.route('/game/rent/<id>', methods=['PUT'])
 def update_game(id):
+    print("id", id)
     payload = request.get_json()
     models.Game.update(name=payload['name'], background_image=payload['background_image'], ratings=payload['ratings'], platforms=payload['platforms']).where(models.Game.id == id).execute()
+    # fine the updated model
     updated_game = models.Game.get_by_id(id)
-    updated_dog_dict = model_to_dict(update_game)
+
+    print("updated_game", updated_game.name, updated_game.background_image)
+    print("updated_game_type", type(updated_game))
+    # updated_dog_dict = model_to_dict(update_game)
 
     return jsonify(
-        data = updated_dog_dict,
+        data = updated_game.json(), # convert model to dictionary
         message = 'updated Successfully',
         status = 200
     ),200

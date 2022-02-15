@@ -13,7 +13,7 @@ PORT=8000
 
 app = Flask(__name__)
 
-CORS(games, origins=['http://localhost:3000'])
+CORS(games, origins=['http://localhost:3000', ])
 app.register_blueprint(games, url_prefix='/games')
 
 
